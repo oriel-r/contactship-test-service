@@ -1,14 +1,18 @@
-import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { LeadsRepository } from './leads.repository';
+import { DeepPartial } from 'typeorm';
+import { Lead } from './entities/lead.entity';
+import { SummaryService } from './services/sumary/summary.service';
 
 @Injectable()
 export class LeadsService {
   private readonly logger = new Logger(LeadsService.name)
 
   constructor(
-    private readonly leadsRepository: LeadsRepository
+    private readonly leadsRepository: LeadsRepository,
+    private readonly summryService: SummaryService
   ) {}
 
   async create(createLeadDto: CreateLeadDto) {
@@ -27,12 +31,19 @@ export class LeadsService {
     return await this.leadsRepository.getOne(id);
   }
 
-    async findOneByEmail(email: string) {
+  async findOneByEmail(email: string) {
       return await this.leadsRepository.getOneByEmail(email)
   }
 
-  async summarize(id: string) {
-    return `This action updates a #${id} lead`;
+  async update(id: string, data: DeepPartial<Lead>) {
+    return await this.leadsRepository.update(id, data)
+  }
+
+  async generateSummarize(id: string) {
+    const lead = await this.leadsRepository.getOne(id)
+    if(!lead) throw new NotFoundException('Lead no encontrado')
+    const response = await this.summryService.processOne(lead)
+    return await this.leadsRepository.save(response)
   }
 
   async batchCreate(data: CreateLeadDto[]) {

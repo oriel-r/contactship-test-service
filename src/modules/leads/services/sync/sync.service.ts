@@ -4,7 +4,7 @@ import { firstValueFrom, map } from 'rxjs';
 import appConfig from 'src/config/app.config';
 import { ConfigType } from '@nestjs/config';
 import { LeadsService } from '../../leads.service';
-import { ExternalLead } from 'src/modules/interfaces/leads-provider-api-response.interface';
+import { ExternalLead } from 'src/modules/leads/interfaces/leads-provider-api-response.interface';
 import { CreateLeadDto } from '../../dto/create-lead.dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -19,7 +19,7 @@ export class SyncService {
         private readonly leadsService: LeadsService
     ) {}
     
-    @Cron(CronExpression.EVERY_MINUTE)
+    @Cron(CronExpression.EVERY_11_HOURS)
     async syncLeadsFromProvider (){
         this.logger.warn('Start leads sincronization...')
         const externalLeads = await this.getLeadsArray()

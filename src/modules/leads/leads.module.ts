@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { LeadsService } from './leads.service';
 import { LeadsController } from './leads.controller';
 import { SyncService } from './services/sync/sync.service';
-import { SumaryService } from './services/sumary/sumary.service';
+import { SummaryService } from './services/sumary/summary.service';
 import { LeadsRepository } from './leads.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Lead } from './entities/lead.entity';
@@ -16,7 +16,7 @@ import { Lead } from './entities/lead.entity';
     LeadsService,
     LeadsRepository,
     SyncService,
-    SumaryService
+    SummaryService
   ],
 })
 export class LeadsModule {}

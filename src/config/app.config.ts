@@ -6,5 +6,8 @@ export default registerAs('appConfig', () => ({
     leadsProvider: {
         api: process.env.LEADS_PROVIDER_API || 'https://randomuser.me/api',
         leadsPerRequest: process.env.LEADS_PER_REQUEST || 10
+    },
+    genAi: {
+        apiKey: process.env.GEMINI_API_KEY
     }
 }))

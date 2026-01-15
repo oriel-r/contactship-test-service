@@ -25,7 +25,7 @@ export class LeadsController {
 
   @Post(':id/summary')
   async summarize(@Param('id') id: string) {
-    return await this.leadsService.summarize(id);
+    return await this.leadsService.generateSummarize(id);
   }
 
 }

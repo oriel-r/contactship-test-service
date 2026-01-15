@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Lead } from "./entities/lead.entity";
 import { DeepPartial, Repository } from "typeorm";
 import { CreateLeadDto } from "./dto/create-lead.dto";
+import { UpdateLeadDto } from "./dto/update-lead.dto";
 
 @Injectable()
 export class LeadsRepository {
@@ -35,8 +36,12 @@ export class LeadsRepository {
         return await this.leadsRepository.existsBy({email})
     }
 
-    async save(data: Lead | DeepPartial<Lead>) {
+    async save(data: Lead) {
         return await this.leadsRepository.save(data)
+    }
+
+    async update(id: string, data) {
+        return await this.leadsRepository.update(id, data)
     }
 
     async batchInsert(data: CreateLeadDto[]) {
