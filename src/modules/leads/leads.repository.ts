@@ -39,5 +39,15 @@ export class LeadsRepository {
         return await this.leadsRepository.save(data)
     }
 
+    async batchInsert(data: CreateLeadDto[]) {
+        const qb = this.leadsRepository.createQueryBuilder()
+                    .insert()
+                    .into(Lead)
+                    .values(data)
+                    .orIgnore()
+        
+        return await qb.execute()    
+    }
+
 
 }

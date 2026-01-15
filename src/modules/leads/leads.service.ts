@@ -35,4 +35,25 @@ export class LeadsService {
     return `This action updates a #${id} lead`;
   }
 
+  async batchCreate(data: CreateLeadDto[]) {
+    this.logger.log('Saving leads in DB...')
+    try{
+      const result = await this.leadsRepository.batchInsert(data)
+      this.logger.log({
+        status: 'Success',
+        detail: {
+          newLeads: result.identifiers.length,
+          skipedLeads: data.length - result.identifiers.length
+        }
+      })
+      return result
+    } catch(err) {
+       this.logger.error({
+        status: 'Error',
+        raw: err
+      })    
+      return
+    }
+  }
+
 }

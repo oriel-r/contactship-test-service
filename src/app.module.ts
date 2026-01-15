@@ -5,6 +5,8 @@ import appConfig from './config/app.config';
 import { dbConfig } from './database/data-source';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { RequestLoggerMiddleware } from './common/middlewares/logger/logger.middleware';
+import { HttpModule } from '@nestjs/axios'
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -17,7 +19,15 @@ import { RequestLoggerMiddleware } from './common/middlewares/logger/logger.midd
       inject: [dbConfig.KEY],
       useFactory: (config: ConfigType<typeof dbConfig>) => config
     }),
-    LeadsModule
+    HttpModule.registerAsync({
+      global: true,
+      inject: [appConfig.KEY],
+      useFactory: (config: ConfigType<typeof appConfig>) => ({
+        baseURL: config.leadsProvider.api
+      }),
+    }),
+    ScheduleModule.forRoot(),
+    LeadsModule,
   ],
   controllers: [],
   providers: [],
