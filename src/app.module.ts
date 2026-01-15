@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { LeadsModule } from './modules/leads/leads.module';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import appConfig from './config/app.config';
-import { dbConfig } from './database/datasource';
+import { dbConfig } from './database/data-source';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 @Module({
@@ -16,7 +16,6 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
       inject: [dbConfig.KEY],
       useFactory: (config: ConfigType<typeof dbConfig>) => config
     }),
-    LeadsModule
   ],
   controllers: [],
   providers: [],

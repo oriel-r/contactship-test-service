@@ -8,26 +8,33 @@ export class LeadsService {
   private readonly logger = new Logger(LeadsService.name)
 
   constructor(
-    private readonly leadsRepository: LeadsRepository
+    private readonly leadsRepository: any
   ) {}
 
-  create(createLeadDto: CreateLeadDto) {
-    return 'This action adds a new lead';
+  async create(createLeadDto: CreateLeadDto) {
+    const {email} = createLeadDto
+    const registred = await this.hasRegistred(email)
+    if(!registred) {
+      return 'This action adds a new lead';
+    }
+    return
   }
 
-  findAll() {
+  async findAll() {
     return `This action returns all leads`;
   }
 
-  findOne(id: number) {
+  async findOne(id: string) {
     return `This action returns a #${id} lead`;
   }
 
-  update(id: number, updateLeadDto: UpdateLeadDto) {
+  async summarize(id: string, updateLeadDto: UpdateLeadDto) {
     return `This action updates a #${id} lead`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} lead`;
+  private async hasRegistred(email: string) {
+    const exist = await this.leadsRepository.hasRegistred(email)
+    return exist
   }
+
 }
