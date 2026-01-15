@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LeadsModule } from './modules/leads/leads.module';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import appConfig from './config/app.config';
 import { dbConfig } from './database/data-source';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
+import { RequestLoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 
 @Module({
   imports: [
@@ -20,4 +21,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware)
+  }
+}
