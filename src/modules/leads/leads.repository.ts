@@ -19,13 +19,20 @@ export class LeadsRepository {
         )
     }
 
+    async getAll() {
+        return await this.leadsRepository.find()
+    }
+
     async getOne(id: string) {
         return await this.leadsRepository.findOneBy({id})
     }
 
+    async getOneByEmail(email: string) {
+        return await this.leadsRepository.findOneBy({email})
+    }
+
     async hasRegistered(email: string) {
-        const exist = await this.leadsRepository.existsBy({email})
-        return !!exist
+        return await this.leadsRepository.existsBy({email})
     }
 
     async save(data: Lead | DeepPartial<Lead>) {

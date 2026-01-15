@@ -17,6 +17,7 @@ import { RequestLoggerMiddleware } from './common/middlewares/logger/logger.midd
       inject: [dbConfig.KEY],
       useFactory: (config: ConfigType<typeof dbConfig>) => config
     }),
+    LeadsModule
   ],
   controllers: [],
   providers: [],

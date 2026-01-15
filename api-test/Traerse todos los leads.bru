@@ -1,0 +1,15 @@
+meta {
+  name: Traerse todos los leads
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/leads
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

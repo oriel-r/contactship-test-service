@@ -1,0 +1,19 @@
+meta {
+  name: Traerse un lead por ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/leads/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+settings {
+  encodeUrl: true
+}

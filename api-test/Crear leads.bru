@@ -1,0 +1,16 @@
+meta {
+  name: Crear leads
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/leads
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

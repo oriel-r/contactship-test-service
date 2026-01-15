@@ -22,9 +22,9 @@ export class LeadsController {
     return await this.leadsService.findOne(id);
   }
 
-  @Post(':id/sumarize')
-  async summarize(@Param('id') id: string, @Body() updateLeadDto: UpdateLeadDto) {
-    return await this.leadsService.summarize(id, updateLeadDto);
+  @Post(':id/summary')
+  async summarize(@Param('id') id: string) {
+    return await this.leadsService.summarize(id);
   }
 
 }

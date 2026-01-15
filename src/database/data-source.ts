@@ -4,7 +4,16 @@ import { registerAs } from '@nestjs/config';
 
 dotenvConfig({ path: '.env' });
 
-const dataSourceConfig: DataSourceOptions = {
+const dataSourceDirectConfig: DataSourceOptions = {
+  type: 'postgres',
+  url: process.env.DIRECT_URL, 
+  synchronize: false, 
+  logging: ['error'],
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/database/migrations/*{.js,.ts}'],
+};
+
+const dataSourceAppConfig: DataSourceOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL, 
   synchronize: false, 
@@ -13,7 +22,7 @@ const dataSourceConfig: DataSourceOptions = {
   migrations: ['dist/database/migrations/*{.js,.ts}'],
 };
 
-export const appDataSource = new DataSource(dataSourceConfig);
+export const appDataSource = new DataSource(dataSourceDirectConfig);
 
-export const dbConfig = registerAs('dataSource', () => dataSourceConfig);
+export const dbConfig = registerAs('dataSource', () => dataSourceAppConfig);
 
