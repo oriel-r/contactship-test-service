@@ -1,10 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { LeadsModule } from './modules/leads/leads.module';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
+import appConfig from './config/app.config';
+import { dbConfig } from './database/datasource';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+      load: [appConfig, dbConfig]
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [dbConfig.KEY],
+      useFactory: (config: ConfigType<typeof dbConfig>) => config
+    }),
+    LeadsModule
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
