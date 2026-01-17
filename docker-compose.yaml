@@ -1,10 +1,25 @@
 services:
-  
-  redis:
-        
-    image: redis:8
+  contact-ship-service:
+    build: .
+    container_name: contact-ship-app
+    env_file:
+      - .env
+    ports:
+      - "${APP_EXTERNAL_PORT:-3000}:${APP_INTERNAL_PORT:-3000}"
+    depends_on:
+      - redis
+    networks:
+      - app-network
 
-    ports: 
-    
-    - '6379:6379'
- 
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    restart: always
+    ports:
+      - "${REDIS_EXTERNAL_PORT:-6379}:${REDIS_INTERNAL_PORT:-6379}"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -21,7 +21,7 @@ export class SyncCron {
         private readonly leadsService: LeadsService
     ) {}
     
-    @Cron(CronExpression.EVERY_5_MINUTES)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async syncLeadsFromProvider (){
         this.logger.warn('Start leads sincronization...')
         const externalLeads = await this.getLeadsArray()
