@@ -3,14 +3,16 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom, map } from 'rxjs';
 import appConfig from 'src/config/app.config';
 import { ConfigType } from '@nestjs/config';
-import { LeadsService } from '../../leads.service';
+import { LeadsService } from './leads.service';
 import { ExternalLead } from 'src/modules/leads/interfaces/leads-provider-api-response.interface';
-import { CreateLeadDto } from '../../dto/create-lead.dto';
+import { CreateLeadDto } from './dto/create-lead.dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
-export class SyncService {
-    private readonly logger = new Logger(SyncService.name)
+export class SyncCron {
+    private readonly logger = new Logger(SyncCron.name)
     
     constructor(
         @Inject(appConfig.KEY)
@@ -19,7 +21,7 @@ export class SyncService {
         private readonly leadsService: LeadsService
     ) {}
     
-    @Cron(CronExpression.EVERY_11_HOURS)
+    @Cron(CronExpression.EVERY_5_MINUTES)
     async syncLeadsFromProvider (){
         this.logger.warn('Start leads sincronization...')
         const externalLeads = await this.getLeadsArray()
@@ -51,6 +53,7 @@ export class SyncService {
         return externalLeads.map((unformatedLead): CreateLeadDto => ({
             firstName: unformatedLead.name.first,
             lastName: unformatedLead.name.last,
+            age: unformatedLead.dob.age,
             email:  unformatedLead.email,
             phone: unformatedLead.phone,
             city: unformatedLead.location.city,

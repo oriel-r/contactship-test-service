@@ -2,20 +2,19 @@ import { GoogleGenAI } from '@google/genai';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import appConfig from 'src/config/app.config';
-import { Lead } from '../../entities/lead.entity';
 import * as fs from 'fs';
 import * as path from 'path';
-import { log } from 'console';
+import { Lead } from '../leads/entities/lead.entity';
 
 @Injectable()
-export class SummaryService {
-    private readonly logger = new Logger(SummaryService.name);
+export class AiService {
+    private readonly logger = new Logger(AiService.name);
     private readonly aiClient: GoogleGenAI;
     private readonly promptPath = path.join(
         process.cwd(),
         'src',
         'modules',
-        'leads',
+        'ai',
         'prompts',
         'vpn_analysis.md'
     );
@@ -43,6 +42,11 @@ export class SummaryService {
 
     async processOne(lead: Lead): Promise<Lead> {
         const { summary, nextAction } = await this.generateSummarize(lead);
+
+        if(!summary || !nextAction) {
+            this.logger.error('Error to generatesummary andnext action')
+            throw new Error()
+        }
 
         return {
             ...lead,

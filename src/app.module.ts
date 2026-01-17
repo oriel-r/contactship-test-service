@@ -7,6 +7,11 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { RequestLoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 import { HttpModule } from '@nestjs/axios'
 import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
+import KeyvRedis, { createKeyv, Keyv } from '@keyv/redis';
+import { BullModule } from '@nestjs/bullmq';
+import { InsightsModule } from './modules/insights/insights.module';
+import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -27,7 +32,27 @@ import { ScheduleModule } from '@nestjs/schedule';
       }),
     }),
     ScheduleModule.forRoot(),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      inject: [appConfig.KEY],
+      useFactory: async (config:ConfigType<typeof appConfig>) => ({
+        stores: [
+          createKeyv(`redis://${config.redis.host}:${config.redis.port}`)
+          ]
+      })
+    }),
+    BullModule.forRootAsync({
+      inject: [appConfig.KEY],
+      useFactory: async (config: ConfigType<typeof appConfig>) => ({
+        connection: {
+          host: config.redis.host,
+          port: config.redis.port
+        }
+      })
+    }),
     LeadsModule,
+    InsightsModule,
+    AiModule,
   ],
   controllers: [],
   providers: [],

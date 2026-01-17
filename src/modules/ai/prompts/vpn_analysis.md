@@ -16,7 +16,7 @@ Focus on:
 3. Propensity to buy based on demographics.
 
 # RESPONSE FORMAT
-Provide your answer only in JSON format, not markdown:
+Provide your answer only in JSON format:
 {
     "summary": "A concise 3-4 sentence paragraph about the lead's profile and needs",
     "nextAction": "One specific, actionable step for the sales representative"
