@@ -1,4 +1,4 @@
-# ContactShip Test Service
+# Leads Insight Generation Service
 
 Backend service built with NestJS and TypeScript to manage leads,
 process asynchronous jobs, and generate AI-powered summaries.
@@ -52,7 +52,7 @@ from request lifecycle - Makes the system easier to scale horizontally
 ### 1️⃣ Clone the repository
 
 git clone https://github.com/oriel-r/contactship-test-service.git\
-cd contactship-test-service
+cd leads-insight-generation-service
 
 ### 2️⃣ Install dependencies
 
