@@ -1,51 +1,115 @@
-# ContactShip AI
+# ContactShip Test Service
 
-Prubea técnica realizada por: Oriel Romero
+Backend service built with NestJS and TypeScript to manage leads,
+process asynchronous jobs, and generate AI-powered summaries.
 
-## Endpoints
+This project was developed from a technical challenge and reflects my
+approach to structuring scalable and maintainable backend services.
 
-Se entregan los siguientes endpoints, siguiendo los prinicpios de la arquitectura REST
+------------------------------------------------------------------------
 
-Por lo tanto, los endpoints ```POST /create-leads ``` y ```POST /leads/:id/summarize``` fueronrenombrados para evitar redundancia
+## 🚀 Tech Stack
 
-| Método | Endpoint        |
-|--------|-----------------|
-| POST   | /leads          |
-| GET    | /leads          |
-| GET    | /leads/{id}     |
-| POST   | /leads/{id}/summary|
+-   NestJS
+-   TypeScript
+-   Redis
+-   BullMQ
+-   Google Gemini API
+-   Docker (for local Redis setup)
 
+------------------------------------------------------------------------
 
-## Prerequisitos
+## 🏗 Architecture Overview
 
-Para levantar el proyecto es importante:
-* Tener Docker instalado
-* Tener una cuenta de Supabase o un DBaaS Postgres
-* Tener un Api Key de Google Gemini
+The application follows a modular architecture using NestJS best
+practices:
 
-## Descripción
+-   Clear separation of concerns (controllers, services, modules)
+-   Asynchronous job processing using BullMQ
+-   Redis used for queue management and caching
+-   External AI integration encapsulated behind a service layer
 
-El servicio fue implementado en base a los solicitado en la prueba, implementando Redis tanto para el procesamiento en cola con la libreria BullMQ como para el cacheode respuestas HTTP
+The goal was to keep the codebase structured, readable, and easily
+extensible.
 
-Decidí dividr las funcionalidades en modulos separados, teniendo así:
-* AiModuloe
-* InsightsModule
-* LeadsModule
+------------------------------------------------------------------------
 
-De esta forma se mantiene una correcta separación de responsabildiades y evitando posibles dependencias circulares
+## 🔄 Asynchronous Processing
 
-Tanto las peticiones como gestion de variablesde etorno fueron realizadas utilizando las herramientas que propone Nest
+One of the core aspects of this project is the use of queues:
 
-El modelo de AI implementado es Google Gemini en su version 3 flash, se eligio este en base a los costos finales que tiene  su API, si bien es irrelevante para esta prueba en un proyecto final esto es determinante para su vviavilidad
+-   Lead processing tasks are pushed into a Redis-backed queue
+-   BullMQ handles job execution
+-   AI summary generation runs asynchronously
 
-Se proporciono contexto en el prompt de sistema para que  este tuviera algo de información extra a la hora de generar el summary y nextAction. Este prompt lo arme en base a lo que a mi modo de entender se busca hacer con el producto final de ContactShip
+This approach: - Improves response time - Decouples heavy processing
+from request lifecycle - Makes the system easier to scale horizontally
 
-Aunque irrelevante lo aclaro, se le sugiere al modelo que debe generar este summary y nextAction teniendo en cuenta  que los clientes finales serán contactados por un proveedor de VPN
+------------------------------------------------------------------------
 
-La persistencia e datos se realiza con un ORM (TypeORM) conectandose directametne mediante el connection string 
+## 📦 Installation
 
-## Para correr el proyecto:
+### 1️⃣ Clone the repository
 
-* Renombrar ```.env.example``` a ```.env```
-* Cargar las variables de entorno
-* Levantar el proyecto con ```docker compose up```
+git clone https://github.com/oriel-r/contactship-test-service.git\
+cd contactship-test-service
+
+### 2️⃣ Install dependencies
+
+npm install
+
+### 3️⃣ Configure environment variables
+
+Create a `.env` file:
+
+PORT=3000\
+REDIS_HOST=localhost\
+REDIS_PORT=6379\
+GEMINI_API_KEY=your_api_key
+
+### 4️⃣ Run Redis (Docker example)
+
+docker run -d -p 6379:6379 redis
+
+### 5️⃣ Start the server
+
+npm run start:dev
+
+------------------------------------------------------------------------
+
+## 📌 API Endpoints (High-Level)
+
+-   Create Lead
+-   Get Leads
+-   Trigger AI Summary generation
+
+(See controllers for detailed route definitions.)
+
+------------------------------------------------------------------------
+
+## 🧠 Design Decisions
+
+-   Used queues to prevent blocking operations.
+-   Encapsulated AI integration to allow future provider replacement.
+-   Focused on modularity to simplify future feature additions.
+-   Designed with scalability in mind rather than quick scripting.
+
+------------------------------------------------------------------------
+
+## 🔍 What I Would Improve
+
+If this were production-ready, I would add:
+
+-   Integration and e2e tests
+-   Structured logging (Winston / Pino)
+-   Observability (metrics + tracing)
+-   Centralized error handling improvements
+-   CI/CD pipeline configuration
+
+------------------------------------------------------------------------
+
+## 📬 Feedback
+
+Feedback is welcome.\
+I'm always open to discussing architecture decisions and backend design
+patterns.
